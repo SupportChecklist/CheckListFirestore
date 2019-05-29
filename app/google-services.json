@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "964409603870",
+    "firebase_url": "https://checklistfirestore.firebaseio.com",
+    "project_id": "checklistfirestore",
+    "storage_bucket": "checklistfirestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964409603870:android:59560d015a708bc2",
+        "android_client_info": {
+          "package_name": "com.cgm.checklistfirestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "964409603870-ifq1q4m46k0ff7knf0vntfbi75cerelo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cgm.checklistfirestore",
+            "certificate_hash": "db0349f249841789925861d0aa5136d500c96aab"
+          }
+        },
+        {
+          "client_id": "964409603870-e493e8dii2da397gum0usji6a4d7fol1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNvubNku04p0IQajKy4a5Qy_Mf9rT16YE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964409603870-e493e8dii2da397gum0usji6a4d7fol1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
