@@ -1,4 +1,4 @@
-package com.cgm.checklistfirestore;
+package com.cgm.checklistfirestore.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cgm.checklistfirestore.activity.SignInOut;
+import com.cgm.checklistfirestore.R;
+import com.cgm.checklistfirestore.fragment.MenuFrag;
 import com.cgm.checklistfirestore.settings.SettingsActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,14 +38,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth mAuth;
-    FirebaseFirestore db;
 
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mGoogleApiClient;
@@ -61,9 +60,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Initialize Firebase Auth e Firestore
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -83,9 +81,9 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        // Carrega fragment
+        // Carrega fragment do menu
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.frameContainer, new MenuFrag()).commit();
+        transaction.replace(R.id.frameContainer, new MenuFrag()).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -112,18 +110,6 @@ public class MainActivity extends AppCompatActivity
         updateUI(currentUser);
     }
 
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
-            }
-        });
-    }
-
     private void updateUI(@Nullable FirebaseUser user) {
 
         // Verificar se estah conectado a internet e logar novamente sla...
@@ -135,7 +121,7 @@ public class MainActivity extends AppCompatActivity
 
             mNameTextView.setText(name);
             mEmailTextView.setText(email);
-            Picasso.get().load(photoUrl).resize(190, 190).centerCrop().into(mUserImageView);
+            Picasso.get().load(photoUrl).resize(200, 200).centerCrop().into(mUserImageView);
 
         } else {
             mNameTextView.setText(R.string.nav_header_title);

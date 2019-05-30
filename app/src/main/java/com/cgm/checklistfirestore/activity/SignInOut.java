@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cgm.checklistfirestore.MainActivity;
 import com.cgm.checklistfirestore.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -18,21 +17,27 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInOut extends AppCompatActivity implements
         View.OnClickListener {
 
     FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     GoogleSignInClient mGoogleSignInClient;
     GoogleApiClient mGoogleApiClient;
@@ -52,8 +57,9 @@ public class SignInOut extends AppCompatActivity implements
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth e Firestore
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -101,6 +107,30 @@ public class SignInOut extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    private void insertUser (FirebaseUser user) {
+//        FirebaseUser user = mAuth.getCurrentUser();
+        String uid = user.getUid();
+        String name = user.getDisplayName();
+        String email = user.getEmail();
+
+        Map<String, Object> usuario = new HashMap<>();
+        usuario.put("Nome", name);
+        usuario.put("Email", email);
+        usuario.put("Uid", uid);
+        db.collection("usuários").document(uid).set(usuario)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(SignInOut.this, "Sucesso!", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(SignInOut.this, "Erro Usuario", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void signOut() {
         FirebaseAuth.getInstance().signOut();
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -146,7 +176,7 @@ public class SignInOut extends AppCompatActivity implements
                             Log.d("TAG", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            Toast.makeText(SignInOut.this, "Logado", Toast.LENGTH_SHORT).show();
+                            insertUser(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
