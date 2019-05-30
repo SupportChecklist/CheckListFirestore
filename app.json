@@ -1,0 +1,18 @@
+{
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-gradle#previous-version"
+    }
+  ],
+  "env": {
+  },
+  "formation": {
+  },
+  "name": "CheckListFirestore",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
